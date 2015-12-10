@@ -2,42 +2,46 @@ FROM ubuntu:14.04
 MAINTAINER Unvired <support@unvired.io>
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
-		ca-certificates \
-		curl \
-		wget \
+    ca-certificates \
+    curl \
+    wget \
         zip \
         unzip \
         supervisor \
         redis-server \
-		openjdk-7-jre-headless \
-		&& rm -rf /opt/lib/apt/lists/*
+    openjdk-7-jre-headless \
+    && rm -rf /opt/lib/apt/lists/*
 
 LABEL vendor="Unvired Inc." \
       com.unvired.ump.module="PLATFORM" \
-      com.unvired.ump.release="R-3.002.0029" \
-      com.unvired.ump.release-date="1-Dec-2015"
+      com.unvired.ump.release="R-3.002.0033" \
+      com.unvired.ump.release-date="10-Dec-2015"
 
-RUN mkdir -p /opt/unvired/temp
+RUN mkdir -p /opt/unvired/temp \
+	&& mkdir -p /var/UMPinput
 
-RUN wget -q --no-check-certificate -O/opt/unvired/temp/UMP3_Docker.zip https://www.dropbox.com/s/evjtpkz4u8sptsg/UMP3_Docker.zip
+RUN wget -q -O/opt/unvired/temp/UMP3_Docker.zip http://owncloud.unvired.com/index.php/s/p7qECutefEvRu9S/download
 
 RUN unzip -qq /opt/unvired/temp/UMP3_Docker.zip -d /opt/unvired/UMP \
     && rm -f /opt/unvired/temp/UMP3_Docker.zip \
     && chmod +x /opt/unvired/UMP/bin/standalone.sh
 
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/standalone/deployments/UMP.ear https://www.dropbox.com/s/d329zw55njfwn2x/UMP-R-3.002.0029.ear
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_Core.jar https://www.dropbox.com/s/p69y10j3zdzj36i/UMP_Core-R-3.002.0029.jar
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_Logger.jar https://www.dropbox.com/s/3a6elt8gxq0bso5/UMP_Logger-R-3.002.0029.jar
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_odata_sdk.jar https://www.dropbox.com/s/ot0mq0g5dxqzx8h/UMP_odata_sdk-R-3.002.0029.jar
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_sapjco_sdk.jar https://www.dropbox.com/s/fjind0lck9vflfy/UMP_sapjco_sdk-R-3.002.0029.jar
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_jdbc_sdk.jar https://www.dropbox.com/s/0g4o6l8rfto6qd2/UMP_jdbc_sdk-R-3.002.0029.jar
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/standalone/configuration/hazelcast.xml https://www.dropbox.com/s/tix8o7m7vt4x0s2/hazelcast.xml
-RUN wget -q --no-check-certificate -O/opt/unvired/UMP/standalone/configuration/standalone-full.xml https://www.dropbox.com/s/12z93s6991a15xd/standalone-full.xml
-RUN wget -q --no-check-certificate -O/etc/supervisor/conf.d/supervisord.conf https://www.dropbox.com/s/ndxmwyzl35ehghv/supervisord.conf
+RUN wget -q -O/opt/unvired/UMP/standalone/deployments/UMP.ear http://owncloud.unvired.com/index.php/s/LOgkvxDFIobz791/download
+RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_Core.jar http://owncloud.unvired.com/index.php/s/6BFU5uFnCE8026C/download
+RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_Logger.jar http://owncloud.unvired.com/index.php/s/sOifjJoPlbuQPSp/download
+RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_odata_sdk.jar http://owncloud.unvired.com/index.php/s/w4pYBiiEdbdhA5S/download
+RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_sapjco_sdk.jar http://owncloud.unvired.com/index.php/s/nAIrU66gAHA9E4d/download
+RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_jdbc_sdk.jar http://owncloud.unvired.com/index.php/s/5geoU5xBHIJJR0j/download
+RUN wget -q -O/opt/unvired/UMP/standalone/configuration/hazelcast.xml http://owncloud.unvired.com/index.php/s/c6xIK2k8lJ4eJ4w/download
+RUN wget -q -O/opt/unvired/UMP/standalone/configuration/standalone-full.xml http://owncloud.unvired.com/index.php/s/j5nomu9aoSPhH6v/download
+RUN wget -q -O/etc/supervisor/conf.d/supervisord.conf http://owncloud.unvired.com/index.php/s/eYb0byRHzN1bWmg/download
 
 ENV JBOSS_HOME=/opt/unvired/UMP
-ENV DOCKER_UMP_VERSION=R-3.002.0029
+ENV DOCKER_UMP_VERSION=R-3.002.0033
 
 EXPOSE 8080 9990
+
+# Any files like SAP connection binaries can be passed in via this volume, the startup script will copy from here to start
+VOLUME /var/UMPinput
 
 ENTRYPOINT ["supervisord"]
