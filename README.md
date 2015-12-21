@@ -9,6 +9,7 @@ Dockerfile for the Unvired Mobile Platform container.
     Hint: Wait for some redis/pub-sub messages to show up in the log.
 4.  Find the docker host IP with the command: docker-machine ip ump
 5.  For e.g. if the output from command in step 4 above was 192.168.99.100 then the platform can be accessed at: http://192.168.99.100:8080/UMP/admin
+	The initial screen will request for a license. Please provide the required details and register for a free trial.  Upload the trial license received to continue.
 6.  Login to the Unvired Admin Cockpit - The default login details are:
     Company : UNVIRED
     User: SA
