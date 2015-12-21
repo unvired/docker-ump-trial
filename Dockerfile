@@ -14,31 +14,37 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 LABEL vendor="Unvired Inc." \
       com.unvired.ump.module="PLATFORM" \
-      com.unvired.ump.release="R-3.002.0033" \
-      com.unvired.ump.release-date="10-Dec-2015"
+      com.unvired.ump.release="R-3.002.0040" \
+      com.unvired.ump.release-date="21-Dec-2015"
 
+# Directories for work and passing input at runtime
 RUN mkdir -p /opt/unvired/temp \
-	&& mkdir -p /var/UMPinput
+  && mkdir -p /var/UMPinput 
 
 RUN wget -q -O/opt/unvired/temp/UMP3_Docker.zip http://owncloud.unvired.com/index.php/s/p7qECutefEvRu9S/download
 
-RUN unzip -qq /opt/unvired/temp/UMP3_Docker.zip -d /opt/unvired/UMP \
+RUN unzip -qq /opt/unvired/temp/UMP3_Docker.zip -d /opt/unvired/UMP3 \
     && rm -f /opt/unvired/temp/UMP3_Docker.zip \
-    && chmod +x /opt/unvired/UMP/bin/standalone.sh
+    && chmod +x /opt/unvired/UMP3/bin/standalone.sh
 
-RUN wget -q -O/opt/unvired/UMP/standalone/deployments/UMP.ear http://owncloud.unvired.com/index.php/s/LOgkvxDFIobz791/download
-RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_Core.jar http://owncloud.unvired.com/index.php/s/6BFU5uFnCE8026C/download
-RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_Logger.jar http://owncloud.unvired.com/index.php/s/sOifjJoPlbuQPSp/download
-RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_odata_sdk.jar http://owncloud.unvired.com/index.php/s/w4pYBiiEdbdhA5S/download
-RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_sapjco_sdk.jar http://owncloud.unvired.com/index.php/s/nAIrU66gAHA9E4d/download
-RUN wget -q -O/opt/unvired/UMP/modules/unvired/middleware/main/UMP_jdbc_sdk.jar http://owncloud.unvired.com/index.php/s/5geoU5xBHIJJR0j/download
-RUN wget -q -O/opt/unvired/UMP/standalone/configuration/hazelcast.xml http://owncloud.unvired.com/index.php/s/c6xIK2k8lJ4eJ4w/download
-RUN wget -q -O/opt/unvired/UMP/standalone/configuration/standalone-full.xml http://owncloud.unvired.com/index.php/s/j5nomu9aoSPhH6v/download
-RUN wget -q -O/etc/supervisor/conf.d/supervisord.conf http://owncloud.unvired.com/index.php/s/eYb0byRHzN1bWmg/download
+# Get the runtime deployment / dependencies for UMP
+RUN wget -q -O/opt/unvired/UMP3/standalone/deployments/UMP.ear http://owncloud.unvired.com/index.php/s/MozjB5OOVIeAwer/download
+RUN wget -q -O/opt/unvired/UMP3/modules/unvired/middleware/main/UMP_Core.jar http://owncloud.unvired.com/index.php/s/dUfxnaqXKt4Piz2/download
+RUN wget -q -O/opt/unvired/UMP3/modules/unvired/middleware/main/UMP_Logger.jar http://owncloud.unvired.com/index.php/s/MyqJVSMKiOFfOVo/download
+RUN wget -q -O/opt/unvired/UMP3/modules/unvired/middleware/main/UMP_odata_sdk.jar http://owncloud.unvired.com/index.php/s/9kdLWxvOZZ5uorr/download
+RUN wget -q -O/opt/unvired/UMP3/modules/unvired/middleware/main/UMP_sapjco_sdk.jar http://owncloud.unvired.com/index.php/s/KKUTuLDZxkE4OIT/download
+RUN wget -q -O/opt/unvired/UMP3/modules/unvired/middleware/main/UMP_jdbc_sdk.jar http://owncloud.unvired.com/index.php/s/0EztBmYLs6PRBrt/download
 
-ENV JBOSS_HOME=/opt/unvired/UMP
-ENV DOCKER_UMP_VERSION=R-3.002.0033
+# Config for trial
+COPY config/hazelcast.xml /opt/unvired/UMP3/standalone/configuration/hazelcast.xml
+COPY config/standalone-full.xml /opt/unvired/UMP3/standalone/configuration/standalone-full.xml
+COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY config/sentinel.conf /etc/sentinel.conf
 
+ENV JBOSS_HOME=/opt/unvired/UMP3
+ENV DOCKER_UMP_VERSION=R-3.002.0040
+
+# Main port and Management console
 EXPOSE 8080 9990
 
 # Any files like SAP connection binaries can be passed in via this volume, the startup script will copy from here to start
