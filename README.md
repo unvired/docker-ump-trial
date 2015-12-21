@@ -23,10 +23,13 @@ Dockerfile for the Unvired Mobile Platform container.
     b. Copy the files sapjco3.jar and libsapjco3.so to a local directory on your system like /home/unvired/sapjco folder.
 9.  If the ump container was started previously, stop it with the command: docker stop ump and remove it: docker rm ump
 10. Now start the container with the command: docker run -d --volumes-from trialdb -v /home/unvired/sapjco:/var/UMPinput -p 8080:8080 --name ump unvired/ump-trial
-11. UMP will now pick the JCO files from your local folder and mounted as /var/UMPinput within the docntainer.  To test this:
+11. UMP will now pick the JCO files from your local folder (and mounted as /var/UMPinput) within the container.  To test this:
     a. Login to the Unvired Admin Cockpit
-    b. Select Backends from the side menu bar.  Then navigate to ports.  From the dropdown select the system "SAP ECC Unvired Customer Search" 
-    c. The table below will now display an entry titled "SAP ECC Port - Unvired Customer Search".  Select the row and click on Test Connection.
+    b. Select Backends from the side menu bar.  Select the "SAP ECC Unvired Customer Search" entry and make sure the system IP address or domain name, system name etc are set correctly.
+    c. Then navigate to ports.  From the dropdown select the system "SAP ECC Unvired Customer Search".
+    d. The table below will now display an entry titled "SAP ECC Port - Unvired Customer Search".  Select the row and click on edit.
+    e. Set the client and other details correctly and save.
+    e. Now select the row displaying the SAP ECC port and click on Test Connection.
     d. Enter the credentials and check.  If connectivity succeeds all is good and you can move on to test the mobile application.
     e. If connection test failed an error is displayed, rectify it and try again.  
     f. Make sure the correct local directory has been passed to the volume mount point.
