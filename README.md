@@ -31,3 +31,5 @@ Dockerfile for the Unvired Mobile Platform container.
     f. Make sure the correct local directory has been passed to the volume mount point.
 12  At any point to troubleshoot if you need access to the system log (for e.g if SAP connectivity test failed), use the command: docker logs -f ump to check the log.
 
+Note: To keep the trial simple, H2 embedded database via the unvired/ump-trialdb data container is provided.  Also the required services are configured to run within the ump-trial
+container (like redis and sentinel) via supervisord.
