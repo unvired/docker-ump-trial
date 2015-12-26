@@ -13,7 +13,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     && rm -rf /opt/lib/apt/lists/*
 
 LABEL vendor="Unvired Inc." \
-      com.unvired.ump.module="PLATFORM" \
+      com.unvired.ump.module="TRIAL-PLATFORM" \
       com.unvired.ump.release="R-3.002.0040" \
       com.unvired.ump.release-date="21-Dec-2015"
 
